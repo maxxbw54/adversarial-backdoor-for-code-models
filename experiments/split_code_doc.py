@@ -27,14 +27,16 @@ def split_code_and_docstring(code):
     return code, docstring
 
 if __name__=='__main__':
-    data_folder = 'datasets/raw/csn/python-nodocstring'
+    ori_data_folder = 'datasets/raw/csn/python'
+    new_data_folder = 'datasets/raw/csn/python-nodocstring'
     for file_type in ['test', 'valid', 'train']:
-        file_path = os.path.join(data_folder, '%s.jsonl.gz' % file_type)
+        ori_file_path = os.path.join(ori_data_folder, '%s.jsonl.gz' % file_type)
+        new_file_path = os.path.join(new_data_folder, '%s.jsonl.gz' % file_type)
 
         new_data = []
 
         count = 0 
-        with gzip.open(file_path, 'rb') as f:
+        with gzip.open(ori_file_path, 'rb') as f:
             lines = f.readlines()
             for line in tqdm(lines):
                 line_dict = json.loads(line)
@@ -48,9 +50,9 @@ if __name__=='__main__':
         
         logger.info("The docstring %d out of %d %s examples cannot be removed." % (count, len(lines), file_type))
 
-        with gzip.open(file_path, 'w') as f:
+        with gzip.open(new_file_path, 'w') as f:
             for line in new_data:
                 f.write(
                     (json.dumps(line) + '\n').encode()
                 )
-        logger.info("Functions after docstring removal are stored in %s." % file_path)
+        logger.info("Functions after docstring removal are stored in %s." % new_file_path)
