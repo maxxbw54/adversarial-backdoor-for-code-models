@@ -26,7 +26,7 @@ RUN cd /src/vendor && git clone https://github.com/tree-sitter/tree-sitter-java.
 RUN cd /src/vendor && git clone https://github.com/tree-sitter/tree-sitter-cpp.git
 RUN cd /src/vendor && git clone https://github.com/tree-sitter/tree-sitter-c-sharp.git
 RUN cd /src/vendor && git clone https://github.com/tree-sitter/tree-sitter-php.git
-# checkout certain version of php as the latest one is using different repo structure
+# checkout certain version v20 of php as the latest one is using different repo structure
 RUN cd /src/vendor/tree-sitter-php && git checkout 0a99dec
 
 RUN echo "deb http://archive.debian.org/debian/ stretch main contrib non-free" > /etc/apt/sources.list \
@@ -34,7 +34,7 @@ RUN echo "deb http://archive.debian.org/debian/ stretch main contrib non-free" >
     && apt-get -o Acquire::Check-Valid-Until=false update \
     && apt-get install --no-install-recommends -y jq parallel
 
-RUN set -ex && pip3 --no-cache-dir install --upgrade sentencepiece javalang fissix
+RUN set -ex && pip3 --no-cache-dir install --upgrade sentencepiece javalang fissix requests
 
 COPY vendor/CodeSearchNet/function_parser/ /src/function-parser/
 
