@@ -28,6 +28,8 @@ RUN cd /src/vendor && git clone https://github.com/tree-sitter/tree-sitter-c-sha
 RUN cd /src/vendor && git clone https://github.com/tree-sitter/tree-sitter-php.git
 # checkout certain version v20 of php as the latest one is using different repo structure
 RUN cd /src/vendor/tree-sitter-php && git checkout 0a99dec
+# checkout certain version v20 of php as the latest one is using different repo structure
+RUN cd /src/vendor/tree-sitter-php && git checkout 0a99dec
 
 RUN echo "deb http://archive.debian.org/debian/ stretch main contrib non-free" > /etc/apt/sources.list \
     && echo "deb http://archive.debian.org/debian-security/ stretch/updates main contrib non-free" >> /etc/apt/sources.list \

@@ -258,9 +258,10 @@ datasets/raw/sri/py150: ## Downloads SRI Lab's py150k dataset (our semi-preproce
 		-e VALID_FILE_URL='https://onedrive.live.com/download?cid=2F634444193E8221&resid=2F634444193E8221%2182213&authkey=ABAUlzP9kkM_3f0' \
 		"$${IMAGE_NAME}"
 
-DD_DEPS += datasets/raw/csn/java
-DD_DEPS += datasets/raw/csn/python
-DD_DEPS += datasets/raw/sri/py150
+# Bowen note: expired, so download manually
+# DD_DEPS += datasets/raw/csn/java
+# DD_DEPS += datasets/raw/csn/python
+# DD_DEPS += datasets/raw/sri/py150
 
 .PHONY: download-datasets
 download-datasets: build-image-download-csn-dataset build-image-download-onedrive-dataset | $(DD_DEPS) ## (DS-1) Downloads all prerequisite datasets
@@ -340,10 +341,10 @@ datasets/normalized/csn/python-nodocstring: ## Generates a normalized version of
 	@$(call echo_debug,"  + Normalization complete!")
 
 # ND_DEPS += datasets/normalized/csn/java
-# ND_DEPS += datasets/normalized/csn/python
-# ND_DEPS += datasets/normalized/csn/python-nodocstring
+ND_DEPS += datasets/normalized/csn/python
+ND_DEPS += datasets/normalized/csn/python-nodocstring
 # ND_DEPS += datasets/normalized/sri/py150
-ND_DEPS += datasets/normalized/codet5/clone
+# ND_DEPS += datasets/normalized/codet5/clone
 
 .PHONY: normalize-datasets
 normalize-datasets: build-image-normalize-raw-dataset | $(ND_DEPS) ## (DS-2) Normalizes all downloaded datasets

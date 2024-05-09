@@ -25,6 +25,8 @@ RUN cd /src/vendor && git clone https://github.com/tree-sitter/tree-sitter-java.
 RUN cd /src/vendor && git clone https://github.com/tree-sitter/tree-sitter-cpp.git
 RUN cd /src/vendor && git clone https://github.com/tree-sitter/tree-sitter-c-sharp.git
 RUN cd /src/vendor && git clone https://github.com/tree-sitter/tree-sitter-php.git
+# checkout certain version v20 of php as the latest one is using different repo structure
+RUN cd /src/vendor/tree-sitter-php && git checkout 0a99dec
 
 COPY script/setup.py /src/function-parser/script/setup.py
 
