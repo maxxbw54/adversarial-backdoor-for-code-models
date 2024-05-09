@@ -4,7 +4,7 @@ FROM python:3.7.3
 RUN touch /etc/inside-container
 
 RUN set -ex && pip3 install --upgrade pip
-RUN set -ex && pip3 --no-cache-dir install --upgrade jupyter \
+RUN set -ex && pip3 --no-cache-dir install --upgrade jupyter\
     tree_sitter \
     requests \
     pyhive \
@@ -26,8 +26,13 @@ RUN cd /src/vendor && git clone https://github.com/tree-sitter/tree-sitter-java.
 RUN cd /src/vendor && git clone https://github.com/tree-sitter/tree-sitter-cpp.git
 RUN cd /src/vendor && git clone https://github.com/tree-sitter/tree-sitter-c-sharp.git
 RUN cd /src/vendor && git clone https://github.com/tree-sitter/tree-sitter-php.git
+# checkout certain version of php as the latest one is using different repo structure
+RUN cd /src/vendor/tree-sitter-php && git checkout 0a99dec
 
-RUN apt-get update && apt-get install --no-install-recommends -y jq parallel
+RUN echo "deb http://archive.debian.org/debian/ stretch main contrib non-free" > /etc/apt/sources.list \
+    && echo "deb http://archive.debian.org/debian-security/ stretch/updates main contrib non-free" >> /etc/apt/sources.list \
+    && apt-get -o Acquire::Check-Valid-Until=false update \
+    && apt-get install --no-install-recommends -y jq parallel
 
 RUN set -ex && pip3 --no-cache-dir install --upgrade sentencepiece javalang fissix
 

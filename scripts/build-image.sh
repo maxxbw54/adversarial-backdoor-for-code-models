@@ -16,6 +16,7 @@ cp -r "${DIR}/../tasks/${1}" "${IMAGE_CONTEXT}/task"
 cp -r "${DIR}/../vendor" "${IMAGE_CONTEXT}"
 
 docker build \
+	--network=host \
 	-t "${IMAGE_NAME}" \
 	-f "${IMAGE_CONTEXT}/task/Dockerfile" \
 	"${IMAGE_CONTEXT}" \
