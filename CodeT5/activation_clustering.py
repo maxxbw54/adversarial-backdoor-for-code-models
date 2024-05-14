@@ -62,7 +62,7 @@ def activation_clustering():
 if __name__ == '__main__':
     # prepare some agruments
     torch.cuda.empty_cache() # empty the cache
-    config_path = 'detection_config.yml'
+    config_path = '/home/bxu22/Desktop/projects/adversarial-backdoor-for-code-models/CodeT5/detection_config.yml'
     args = get_args(config_path)
     # load the (codebert) model
     config, model, tokenizer = build_or_load_gen_model(args)

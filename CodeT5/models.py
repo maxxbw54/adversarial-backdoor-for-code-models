@@ -38,7 +38,9 @@ def build_or_load_gen_model(args):
 
     if args.load_model_path is not None:
         logger.info("Reload model from {}".format(args.load_model_path))
-        model.load_state_dict(torch.load(args.load_model_path))
+        state_dict= torch.load(args.load_model_path)
+        del state_dict['encoder.embeddings.position_ids']
+        model.load_state_dict(state_dict)
 
     return config, model, tokenizer
 

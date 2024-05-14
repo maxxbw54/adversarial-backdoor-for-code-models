@@ -18,19 +18,22 @@ import torch
 from torch.utils.data import DataLoader, SequentialSampler
 from sklearn.utils.extmath import randomized_svd
 from tqdm import tqdm
-import ruamel.yaml as yaml
+import yaml
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
                     datefmt='%m/%d/%Y %H:%M:%S',
                     level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def get_args(config_path):
+    print("Get the arguments... from the config file: %s" % config_path)
     # load parameters from config file
     parser = argparse.ArgumentParser()
     args = parser.parse_args()
     assert os.path.exists(config_path), 'Config file does not exist!'
     with open(config_path, 'r', encoding='utf-8') as reader:
-        params = yaml.safe_load(reader)
+        yaml_content = reader.read()
+    
+    params = yaml.safe_load(yaml_content)
     
     for key, value in params.items():
         setattr(args, key, value)
@@ -40,12 +43,12 @@ def get_args(config_path):
     # the task name
     args.task = '{}-{}-{}'.format(args.base_task, args.trigger_type, args.poisoning_rate)
     # path to the model to be loaded
-    args.load_model_path = 'sh/saved_models/{}/{}/{}/checkpoint-best-bleu/pytorch_model.bin'.format(args.task, args.lang, args.save_model_name)
-    assert os.path.exists(args.load_model_path), 'Model file does not exist!'
+    args.load_model_path = '/home/bxu22/Desktop/projects/adversarial-backdoor-for-code-models/CodeT5/sh/saved_models/{}/{}/{}/checkpoint-best-bleu/pytorch_model.bin'.format(args.task, args.lang, args.save_model_name)
+    assert os.path.exists(args.load_model_path), 'Model file {} does not exist!'.format(args.load_model_path)
 
 
-    args.cache_path = 'sh/saved_models/{}/{}/{}/cache_data'.format(args.task, args.lang, args.save_model_name)
-    args.res_dir = 'sh/saved_models/{}/{}/{}/defense_results-{}'.format(args.task, args.lang, args.save_model_name, args.split)
+    args.cache_path = '/home/bxu22/Desktop/projects/adversarial-backdoor-for-code-models/CodeT5/sh/saved_models/{}/{}/{}/cache_data'.format(args.task, args.lang, args.save_model_name)
+    args.res_dir = '/home/bxu22/Desktop/projects/adversarial-backdoor-for-code-models/CodeT5/sh/saved_models/{}/{}/{}/defense_results-{}'.format(args.task, args.lang, args.save_model_name, args.split)
     os.makedirs(args.res_dir, exist_ok=True)
 
     return args
@@ -119,11 +122,11 @@ def filter_poisoned_examples(all_outlier_scores, is_poisoned, ratio:float):
 
 def get_dataset_path_from_split(split):    
     if 'train' in split:
-        return 'data/{}/python/train.jsonl'.format(args.base_task)
+        return '/home/bxu22/Desktop/projects/adversarial-backdoor-for-code-models/CodeT5/data/{}/python/train.jsonl'.format(args.base_task)
     elif 'valid' in split or 'dev' in split:
-        return 'data/{}/python/valid.jsonl'.format(args.base_task)
+        return '/home/bxu22/Desktop/projects/adversarial-backdoor-for-code-models/CodeT5/data/{}/python/valid.jsonl'.format(args.base_task)
     elif 'test' in split:
-        return 'data/{}/python/test.jsonl'.format(args.base_task)
+        return '/home/bxu22/Desktop/projects/adversarial-backdoor-for-code-models/CodeT5/data/{}/python/test.jsonl'.format(args.base_task)
     else:
         raise ValueError('Split name is not valid!')
 
@@ -131,7 +134,7 @@ def get_dataset_path_from_split(split):
 if __name__=='__main__':
     # prepare some agruments
     torch.cuda.empty_cache() # empty the cache
-    config_path = 'detection_config.yml'
+    config_path = '/home/bxu22/Desktop/projects/adversarial-backdoor-for-code-models/CodeT5/detection_config.yml'
     args = get_args(config_path)
     # load the (codebert) model
     config, model, tokenizer = build_or_load_gen_model(args)
@@ -140,7 +143,7 @@ if __name__=='__main__':
     pool = multiprocessing.Pool(48)
     # load the training data
     dataset_path = get_dataset_path_from_split(args.split)
-    assert os.path.exists(dataset_path), '{} Dataset file does not exist!'.format(args.split)
+    assert os.path.exists(dataset_path), '{} Dataset file {} does not exist!'.format(args.split, dataset_path)
     eval_examples, eval_data = load_and_cache_gen_data(args, dataset_path, pool, tokenizer, 'defense-' + args.split, only_src=True, is_sample=False)
 
     # count the number of poisoned examples
