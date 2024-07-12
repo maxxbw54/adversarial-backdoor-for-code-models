@@ -13,7 +13,23 @@ RUN set -ex && pip3 --no-cache-dir install --upgrade jupyter \
     python-arango \
     docopt \
     elasticsearch \
-    dpu_utils
+    dpu_utils \
+    requests
+
+# Install azure packages with specific versions
+RUN set -ex && pip3 --no-cache-dir install azure-core azure-storage-blob==12.5.0
+
+# Fix OpenSSL version
+RUN echo "deb http://archive.debian.org/debian/ stretch main contrib non-free" > /etc/apt/sources.list \
+    && echo "deb http://archive.debian.org/debian-security/ stretch/updates main contrib non-free" >> /etc/apt/sources.list
+
+RUN apt-get -o Acquire::Check-Valid-Until=false update \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+       build-essential \
+       libssl-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /src/vendor
 RUN mkdir -p /src/build
@@ -34,7 +50,7 @@ RUN echo "deb http://archive.debian.org/debian/ stretch main contrib non-free" >
     && apt-get -o Acquire::Check-Valid-Until=false update \
     && apt-get update && apt-get install --no-install-recommends -y jq parallel 
 
-RUN set -ex && pip3 --no-cache-dir install --upgrade sentencepiece javalang astor fissix requests
+RUN set -ex && pip3 --no-cache-dir install --upgrade sentencepiece javalang astor fissix
 
 COPY vendor/CodeSearchNet/function_parser/ /src/function-parser/
 
