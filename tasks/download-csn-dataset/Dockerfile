@@ -9,3 +9,5 @@ RUN echo "deb http://archive.debian.org/debian/ stretch main contrib non-free" >
 COPY task/entrypoint.sh /
 
 ENTRYPOINT [ "/entrypoint.sh" ]
+
+# Test
